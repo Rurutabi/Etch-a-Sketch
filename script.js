@@ -1,13 +1,5 @@
 "use strict";
 
-// const body = document.body;
-// const container = document.createElement("div");
-// body.appendChild(container);
-
-//const random = d.quarySelect('classname')
-// const container = document.querySelector(".container");
-
-// Create HTML element
 class myElement {
   constructor(elementType, className, parent) {
     this.element = document.createElement(elementType);
@@ -24,8 +16,8 @@ class myElement {
   createList(listNumber, listType, listClassName) {
     const elements = [];
     for (let i = 1; i <= listNumber; i++) {
-      const blocklist = new myElement(listType, listClassName, this.element);
-      elements.push(blocklist);
+      const blockList = new myElement(listType, listClassName, this.element);
+      elements.push(blockList);
     }
     return elements;
   }
@@ -33,20 +25,55 @@ class myElement {
 
 const container = new myElement("div", "container", document.body);
 
-//Create header
+//Create header,menu and section
 const header = new myElement("div", "header", container.element);
-const hi = new myElement("div", "hi", container.element);
-
 header.setTextContext("Etch-a-sketch");
+const section = new myElement("div", "section", container.element);
+const menu = new myElement("div", "menu", section.element);
 
-const bodyflex = new myElement("div", "body-flex", container.element);
-const menu = new myElement("div", "menu", bodyflex.element);
-const grid = new myElement("div", "grid", bodyflex.element);
+//Create menu list
+const blockList = menu.createList(1, "div", "blockList");
+const newList = blockList.flatMap((blockList) =>
+  blockList.createList(6, "li", "list")
+);
 
-//List
-const blocklist = menu.createList(4, "div", "blocklist");
-// for (let i = 1; i <= 4; i++) {
-//   const blocklist = new myElement("div", "block-list", menu.element);
+newList[0].setTextContext("Pick Color");
+newList[1].setTextContext("Color Mode");
+newList[2].setTextContext("Rainbow Mode");
+newList[3].setTextContext("Eraser");
+newList[4].setTextContext("Clear");
+newList[5].setTextContext("Select Range");
+
+//Creating Grid
+const gridContainer = new myElement("div", "grid-container", section.element);
+const userInput = 16;
+gridContainer.element.style.width = "400px";
+const squareSize = gridContainer.element.clientWidth / userInput;
+const newGrid = gridContainer.createList(
+  userInput * userInput,
+  "div",
+  "grid-item"
+);
+
+gridContainer.element.style.gridTemplateRows = `repeat(${userInput}, ${squareSize}px)`;
+gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${squareSize}px)`;
+
+//Mouse over example
+
+// const container = document.querySelector(".container");
+// const gridSize = 64;
+// const squareSize = container.clientWidth / gridSize;
+
+// container.style.gridTemplateRows = `repeat(${gridSize}, ${squareSize}px)`;
+// container.style.gridTemplateColumns = `repeat(${gridSize}, ${squareSize}px)`;
+// const [list1, list2, list3, list4] = newList;
+// list1[0].setTextContext("Hello");
+
+// class myGrid extends myElement {
+//   constructor(elementType, className, parent, gridNumber) {
+//     super(elementType, className, parent);
+//     this.gridNumber = gridNumber;
+//   }
 // }
 
 /*Note about function

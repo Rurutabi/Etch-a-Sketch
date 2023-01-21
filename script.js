@@ -37,12 +37,16 @@ const newList = blockList.flatMap((blockList) =>
   blockList.createList(6, "li", "list")
 );
 
-newList[0].setTextContext("Pick Color");
-newList[1].setTextContext("Color Mode");
-newList[2].setTextContext("Rainbow Mode");
-newList[3].setTextContext("Eraser");
-newList[4].setTextContext("Clear");
-newList[5].setTextContext("Select Range");
+const [pickColour, colorMode, rainbowMode, eraser, clear, selectRange] =
+  newList;
+
+//Set menu text
+pickColour.setTextContext("Pick Colour");
+colorMode.setTextContext("Color Mode");
+rainbowMode.setTextContext("Rainbow Mode");
+eraser.setTextContext("Eraser");
+clear.setTextContext("Clear");
+selectRange.setTextContext("Select Range");
 
 //Creating Grid
 const gridContainer = new myElement("div", "grid-container", section.element);
@@ -58,7 +62,58 @@ const newGrid = gridContainer.createList(
 gridContainer.element.style.gridTemplateRows = `repeat(${userInput}, ${squareSize}px)`;
 gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${squareSize}px)`;
 
-//Mouse over example
+class colourGrid {
+  colour = "black";
+  randomCheck = false;
+  constructor() {
+    this.colourGrid();
+    this.chooseColour();
+    this.randomColour();
+  }
+
+  colourGrid() {
+    let isClicked = false;
+    newGrid.forEach((value) => {
+      value.element.addEventListener("mousedown", (e) => {
+        isClicked = true;
+        e.preventDefault();
+      });
+
+      value.element.addEventListener("mouseup", () => {
+        isClicked = false;
+      });
+      value.element.addEventListener("mousemove", () => {
+        if (isClicked === true) {
+          value.element.style.backgroundColor = this.colour;
+        }
+      });
+    });
+  }
+
+  chooseColour() {
+    pickColour.element.addEventListener("click", () => {
+      this.colour = "red";
+    });
+  }
+
+  randomColour() {
+    rainbowMode.element.addEventListener("click", () => {
+      this.randomCheck = true;
+      this.colour = this.getRandomColor();
+    });
+  }
+
+  getRandomColor() {
+    let letters = "0123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }
+}
+
+const draw = new colourGrid();
 
 // const container = document.querySelector(".container");
 // const gridSize = 64;
@@ -93,3 +148,31 @@ gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${square
 
 // const Roy = new person("Roy", "Sompamit");
 // console.log(Roy);
+
+// container.colorGrid();
+
+// newGrid.forEach((value) => value.colorGrid());
+
+// newGrid.element.drawGrid();
+
+// newGrid.forEach((value) => console.log((value.element.setTextContext = "hi")));
+// console.log(newGrid.element);
+
+//Mouse over example
+// let isClicked = false;
+// newGrid.forEach((value) => {
+//   value.element.addEventListener("mousedown", (e) => {
+//     isClicked = true;
+//     e.preventDefault();
+//   });
+
+//   value.element.addEventListener("mouseup", () => {
+//     isClicked = false;
+//   });
+
+//   value.element.addEventListener("mousemove", () => {
+//     if (isClicked === true) {
+//       value.element.style.backgroundColor = "black";
+//     }
+//   });
+// });

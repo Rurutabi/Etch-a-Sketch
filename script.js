@@ -21,6 +21,18 @@ class myElement {
     }
     return elements;
   }
+  // setGridId() {
+  //   let i = 0;
+  //   const newE = [];
+  //   for (let j = 0; j < userInput * userInput; j++) {
+  //     newE.push(this.element);
+  //   }
+  //   console.log(newE.length);
+  //   while (i < newE.length) {
+  //     i++;
+  //     this.element.setAttribute("dataset", i);
+  //   }
+  // }
 }
 
 const container = new myElement("div", "container", document.body);
@@ -62,13 +74,21 @@ const newGrid = gridContainer.createList(
 gridContainer.element.style.gridTemplateRows = `repeat(${userInput}, ${squareSize}px)`;
 gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${squareSize}px)`;
 
+newGrid.map((value, index) => value.element.setAttribute("id", index));
+// const temp = document.getElementById("0");
+// console.log(temp);
+
 class colourGrid {
   colour = "black";
   randomCheck = false;
+  curretIndex;
+  previousIndex;
+  eraserMode = false;
   constructor() {
     this.colourGrid();
     this.chooseColour();
     this.randomColour();
+    this.getRandomColor();
   }
 
   colourGrid() {
@@ -82,9 +102,20 @@ class colourGrid {
       value.element.addEventListener("mouseup", () => {
         isClicked = false;
       });
+
       value.element.addEventListener("mousemove", () => {
+        this.previousIndex = this.curretIndex;
+        this.curretIndex = value.element.getAttribute("id");
+
         if (isClicked === true) {
-          value.element.style.backgroundColor = this.colour;
+          if (this.randomCheck === false) {
+            value.element.style.backgroundColor = this.colour;
+          } else if (
+            this.randomCheck === true &&
+            this.curretIndex !== this.previousIndex
+          ) {
+            value.element.style.backgroundColor = this.getRandomColor();
+          }
         }
       });
     });
@@ -92,16 +123,20 @@ class colourGrid {
 
   chooseColour() {
     pickColour.element.addEventListener("click", () => {
-      this.colour = "red";
+      this.randomCheck = false;
+      this.colour = "black";
     });
   }
 
   randomColour() {
     rainbowMode.element.addEventListener("click", () => {
       this.randomCheck = true;
-      this.colour = this.getRandomColor();
     });
   }
+
+  // checkMouse() {
+  //   console.log((this.randomCheck = false));
+  // }
 
   getRandomColor() {
     let letters = "0123456789ABCDEF";

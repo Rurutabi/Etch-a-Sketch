@@ -55,29 +55,32 @@ clear.setTextContext("Clear");
 pickColour.replaceElement("input");
 pickColour.element.setAttribute("type", "color");
 pickColour.element.setAttribute("value", "#000000");
+pickColour.element.setAttribute("class", "pick-colour");
 selectRange.replaceElement("input");
 selectRange.element.setAttribute("type", "range");
 selectRange.element.setAttribute("value", "16");
 selectRange.element.setAttribute("min", "1");
 selectRange.element.setAttribute("max", "64");
+selectRange.element.setAttribute("class", "select-range");
+rangeNumber.element.setAttribute("class", "range-number");
+rangeNumber.replaceElement("p");
 rangeNumber.element.textContent = 16;
 
-class colourGrid {
+class drawGrid {
   colour = pickColour.element.value;
   randomCheck = false;
   eraserMode = false;
   curretIndex;
   previousIndex;
   constructor() {
-    this.colourGrid();
+    this.drawGrid();
     this.chooseColour();
     this.randomColour();
     this.getRandomColor();
     this.eraseColour();
-    this.clearColour();
   }
 
-  colourGrid() {
+  drawGrid() {
     //DeafultSize
     let userInput = 16;
     const gridContainer = new myElement(
@@ -98,6 +101,7 @@ class colourGrid {
     newGrid.map((value, index) => value.element.setAttribute("id", index));
 
     this.colourAllGird(newGrid);
+    this.clearColour(newGrid);
 
     //User selective size
     selectRange.element.addEventListener("input", (event) => {
@@ -116,6 +120,7 @@ class colourGrid {
       newGrid.map((value, index) => value.element.setAttribute("id", index));
 
       this.colourAllGird(newGrid);
+      this.clearColour(newGrid);
     });
   }
 
@@ -172,7 +177,7 @@ class colourGrid {
     });
   }
 
-  clearColour() {
+  clearColour(newGrid) {
     clear.element.addEventListener("click", () => {
       newGrid.forEach(
         (value) => (value.element.style.backgroundColor = "white")
@@ -190,4 +195,4 @@ class colourGrid {
   }
 }
 
-const draw = new colourGrid();
+const draw = new drawGrid();

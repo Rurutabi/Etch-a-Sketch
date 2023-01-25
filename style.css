@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css?family=Audiowide");
 * {
   margin: 0;
   padding: 0;
@@ -5,39 +6,67 @@
 
 body {
   height: 100vh;
+  font-family: "Audiowide", sans-serif;
+  font-size: 40%;
 }
 
 .container {
   display: flex;
-  background-color: grey;
+  background-color: #6c91bf;
   flex-direction: column;
+  justify-content: center;
 }
 
 li {
   list-style-type: none;
-  background-color: #2196f3;
+
+  font-size: 16px;
   padding: 12px;
 }
 
+p {
+  font-size: 16px;
+}
+
 li,
-input {
+p {
   display: flex;
   justify-content: center;
+}
+
+.select-range {
+  margin-top: 6px;
+  margin-bottom: 6px;
+  width: 100%;
+}
+
+.range-number {
+  background-color: #6c91bf;
+}
+
+.pick-colour {
+  appearance: none;
+  background-color: transparent;
+  width: 50px;
+  height: 50px;
+  border-style: solid;
+  border-color: white;
+  display: block;
+  margin: 10px auto;
 }
 
 .header {
   display: flex;
   justify-content: center;
-  font-size: 24px;
+  font-size: 36px;
   font-weight: bold;
-  font-family: sans-serif;
-  background-color: black;
+  background-color: #6c91bf;
   padding: 50px;
-  color: white;
+  color: black;
 }
 
 .section {
-  margin-top: 5rem;
+  margin-top: 1rem;
   margin-bottom: 8rem;
   display: flex;
   justify-content: center;
@@ -47,12 +76,14 @@ input {
 .menu {
   display: flex;
   align-items: center;
+  border: 10px solid #5bc8af;
   padding: 12px;
+  background-color: white;
 }
 
 .grid-container {
   display: grid;
-  border: 20px solid #2196f3;
+  border: 10px solid #5bc8af;
 }
 
 .grid-item {

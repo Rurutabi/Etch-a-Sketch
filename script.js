@@ -21,18 +21,12 @@ class myElement {
     }
     return elements;
   }
-  // setGridId() {
-  //   let i = 0;
-  //   const newE = [];
-  //   for (let j = 0; j < userInput * userInput; j++) {
-  //     newE.push(this.element);
-  //   }
-  //   console.log(newE.length);
-  //   while (i < newE.length) {
-  //     i++;
-  //     this.element.setAttribute("dataset", i);
-  //   }
-  // }
+
+  replaceElement(elementType) {
+    const newNode = document.createElement(elementType);
+    this.element.parentNode.replaceChild(newNode, this.element);
+    this.element = newNode;
+  }
 }
 
 const container = new myElement("div", "container", document.body);
@@ -49,49 +43,83 @@ const newList = blockList.flatMap((blockList) =>
   blockList.createList(6, "li", "list")
 );
 
-const [pickColour, colorMode, rainbowMode, eraser, clear, selectRange] =
+const [pickColour, rainbowMode, eraser, clear, selectRange, rangeNumber] =
   newList;
 
 //Set menu text
-pickColour.setTextContext("Pick Colour");
-colorMode.setTextContext("Color Mode");
 rainbowMode.setTextContext("Rainbow Mode");
 eraser.setTextContext("Eraser");
 clear.setTextContext("Clear");
-selectRange.setTextContext("Select Range");
 
-//Creating Grid
-const gridContainer = new myElement("div", "grid-container", section.element);
-const userInput = 16;
-gridContainer.element.style.width = "400px";
-const squareSize = gridContainer.element.clientWidth / userInput;
-const newGrid = gridContainer.createList(
-  userInput * userInput,
-  "div",
-  "grid-item"
-);
-
-gridContainer.element.style.gridTemplateRows = `repeat(${userInput}, ${squareSize}px)`;
-gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${squareSize}px)`;
-
-newGrid.map((value, index) => value.element.setAttribute("id", index));
-// const temp = document.getElementById("0");
-// console.log(temp);
+//li change list element to input
+pickColour.replaceElement("input");
+pickColour.element.setAttribute("type", "color");
+pickColour.element.setAttribute("value", "#000000");
+selectRange.replaceElement("input");
+selectRange.element.setAttribute("type", "range");
+selectRange.element.setAttribute("value", "16");
+selectRange.element.setAttribute("min", "1");
+selectRange.element.setAttribute("max", "64");
+rangeNumber.element.textContent = 16;
 
 class colourGrid {
-  colour = "black";
+  colour = pickColour.element.value;
   randomCheck = false;
+  eraserMode = false;
   curretIndex;
   previousIndex;
-  eraserMode = false;
   constructor() {
     this.colourGrid();
     this.chooseColour();
     this.randomColour();
     this.getRandomColor();
+    this.eraseColour();
+    this.clearColour();
   }
 
   colourGrid() {
+    //DeafultSize
+    let userInput = 16;
+    const gridContainer = new myElement(
+      "div",
+      "grid-container",
+      section.element
+    );
+    gridContainer.element.style.width = "400px";
+
+    let newGrid = gridContainer.createList(
+      userInput * userInput,
+      "div",
+      "grid-item"
+    );
+    let squareSize = gridContainer.element.clientWidth / userInput;
+    gridContainer.element.style.gridTemplateRows = `repeat(${userInput}, ${squareSize}px)`;
+    gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${squareSize}px)`;
+    newGrid.map((value, index) => value.element.setAttribute("id", index));
+
+    this.colourAllGird(newGrid);
+
+    //User selective size
+    selectRange.element.addEventListener("input", (event) => {
+      rangeNumber.element.textContent = event.target.value;
+      userInput = event.target.value;
+      gridContainer.element.textContent = "";
+
+      let newGrid = gridContainer.createList(
+        userInput * userInput,
+        "div",
+        "grid-item"
+      );
+      let squareSize = gridContainer.element.clientWidth / userInput;
+      gridContainer.element.style.gridTemplateRows = `repeat(${userInput}, ${squareSize}px)`;
+      gridContainer.element.style.gridTemplateColumns = `repeat(${userInput}, ${squareSize}px)`;
+      newGrid.map((value, index) => value.element.setAttribute("id", index));
+
+      this.colourAllGird(newGrid);
+    });
+  }
+
+  colourAllGird(newGrid) {
     let isClicked = false;
     newGrid.forEach((value) => {
       value.element.addEventListener("mousedown", (e) => {
@@ -108,13 +136,15 @@ class colourGrid {
         this.curretIndex = value.element.getAttribute("id");
 
         if (isClicked === true) {
-          if (this.randomCheck === false) {
+          if (this.randomCheck === false && this.eraserMode === false) {
             value.element.style.backgroundColor = this.colour;
           } else if (
             this.randomCheck === true &&
             this.curretIndex !== this.previousIndex
           ) {
             value.element.style.backgroundColor = this.getRandomColor();
+          } else if (this.randomCheck === false && this.eraserMode === true) {
+            value.element.style.backgroundColor = "white";
           }
         }
       });
@@ -122,9 +152,10 @@ class colourGrid {
   }
 
   chooseColour() {
-    pickColour.element.addEventListener("click", () => {
+    pickColour.element.addEventListener("change", () => {
+      this.colour = pickColour.element.value;
+      this.eraserMode = false;
       this.randomCheck = false;
-      this.colour = "black";
     });
   }
 
@@ -134,9 +165,20 @@ class colourGrid {
     });
   }
 
-  // checkMouse() {
-  //   console.log((this.randomCheck = false));
-  // }
+  eraseColour() {
+    eraser.element.addEventListener("click", () => {
+      this.randomCheck = false;
+      this.eraserMode = true;
+    });
+  }
+
+  clearColour() {
+    clear.element.addEventListener("click", () => {
+      newGrid.forEach(
+        (value) => (value.element.style.backgroundColor = "white")
+      );
+    });
+  }
 
   getRandomColor() {
     let letters = "0123456789ABCDEF";
@@ -149,65 +191,3 @@ class colourGrid {
 }
 
 const draw = new colourGrid();
-
-// const container = document.querySelector(".container");
-// const gridSize = 64;
-// const squareSize = container.clientWidth / gridSize;
-
-// container.style.gridTemplateRows = `repeat(${gridSize}, ${squareSize}px)`;
-// container.style.gridTemplateColumns = `repeat(${gridSize}, ${squareSize}px)`;
-// const [list1, list2, list3, list4] = newList;
-// list1[0].setTextContext("Hello");
-
-// class myGrid extends myElement {
-//   constructor(elementType, className, parent, gridNumber) {
-//     super(elementType, className, parent);
-//     this.gridNumber = gridNumber;
-//   }
-// }
-
-/*Note about function
-1. New {} is created
-2. function is called,this = {}
-3. {} linked to prototype
-4. function automatically return {}
-*/
-
-// Class Exampe
-// class person {
-//   constructor(firstName, lastName) {
-//     this.firstName = firstName;
-//     this.lastName = lastName;
-//   }
-// }
-
-// const Roy = new person("Roy", "Sompamit");
-// console.log(Roy);
-
-// container.colorGrid();
-
-// newGrid.forEach((value) => value.colorGrid());
-
-// newGrid.element.drawGrid();
-
-// newGrid.forEach((value) => console.log((value.element.setTextContext = "hi")));
-// console.log(newGrid.element);
-
-//Mouse over example
-// let isClicked = false;
-// newGrid.forEach((value) => {
-//   value.element.addEventListener("mousedown", (e) => {
-//     isClicked = true;
-//     e.preventDefault();
-//   });
-
-//   value.element.addEventListener("mouseup", () => {
-//     isClicked = false;
-//   });
-
-//   value.element.addEventListener("mousemove", () => {
-//     if (isClicked === true) {
-//       value.element.style.backgroundColor = "black";
-//     }
-//   });
-// });

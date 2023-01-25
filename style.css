@@ -19,6 +19,12 @@ li {
   padding: 12px;
 }
 
+li,
+input {
+  display: flex;
+  justify-content: center;
+}
+
 .header {
   display: flex;
   justify-content: center;
@@ -40,6 +46,7 @@ li {
 
 .menu {
   display: flex;
+  align-items: center;
   padding: 12px;
 }
 
